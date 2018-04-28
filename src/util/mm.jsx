@@ -2,4 +2,4 @@ class MUtil {
 
 }
 
-export default MUtil; 
+export default MUtil;
