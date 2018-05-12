@@ -38,7 +38,10 @@ class MUtil {
     }
     // 错误提示
     errorTips(errMsg) {
-        alert(errMsg || '好像哪里不对了')
+        alert(errMsg || '好像哪里不对了');
+    }
+    successTips(successMsg) {
+        alert(successMsg || '操作成功');
     }
     setStorage(name, data) {
         let dataType = typeof data;
