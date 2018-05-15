@@ -8,6 +8,8 @@ import TableList from 'util/table-list/index.jsx';
 const _mm = new MUtil();
 const _order = new Order();
 
+import './detail.scss';
+
 class OrderDetail extends React.Component{
     constructor(props) {
         super(props);
@@ -29,9 +31,27 @@ class OrderDetail extends React.Component{
                 _mm.errorTips(errMsg);
             })
     }
+    //发货操作
+    onSendGoods() {
+        if(window.confirm('是否确认该订单已经发货? ')) {
+            _order.sendGoods(this.state.orderNumber).then((res) => {
+                _mm.successTips('发货成功');
+                this.loadOrderDetail();
+            }, (errMsg) => {
+                _mm.errorTips(errMsg);
+            })
+        }
+    }
     render() {
-        let receiverInfo = this.state.orderInfo.shippingvo || {},
+        let receiverInfo = this.state.orderInfo.shippingVo || {},
             productList = this.state.orderInfo.orderItemVoList || [];
+        let tableHeads = [
+            {name: '商品图片', width: '15%'},
+            {name: '商品信息', width: '45%'},
+            {name: '单价', width: '15%'},
+            {name: '数量', width: '15%'},
+            {name: '合计', width: '15%'},
+        ];
         return (
             <div id="page-wrapper">
                 <PageTitle title="订单详情"/>
@@ -52,7 +72,7 @@ class OrderDetail extends React.Component{
                         <label className="col-md-2 control-label">收件人</label>
                         <div className="col-md-5">
                             <p className="form-control-static">
-                                {receiverInfo.receiverName}
+                                {receiverInfo.receiverName},
                                 {receiverInfo.receiverProvince}
                                 {receiverInfo.receiverCity}
                                 {receiverInfo.receiverAddress}
@@ -63,7 +83,14 @@ class OrderDetail extends React.Component{
                     <div className="form-group">
                         <label className="col-md-2 control-label">订单状态</label>
                         <div className="col-md-5">
-                            <p className="form-control-static">{this.state.orderInfo.statusDesc}</p>
+                            <p className="form-control-static">
+                                {this.state.orderInfo.statusDesc}
+                                {
+                                    this.state.orderInfo.status === 20 ?
+                                        <button className="btn btn-default btn-sm btn-send-goods" onClick={(e) => {this.onSendGoods(e)}}>立即发货</button>
+                                        : null
+                                }
+                            </p>
                         </div>
                     </div>
                     <div className="form-group">
@@ -81,7 +108,7 @@ class OrderDetail extends React.Component{
                     <div className="form-group">
                         <label className="col-md-2 control-label">商品列表</label>
                         <div className="col-md-10">
-                            <TableList tableHeads={['商品图片', '商品信息', '单价', '数量', '合计']}>
+                            <TableList tableHeads={tableHeads}>
                                 {
                                     productList.map((product, index) => {
                                         return (

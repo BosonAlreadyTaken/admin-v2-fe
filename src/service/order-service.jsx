@@ -31,6 +31,15 @@ class Order {
             }
         })
     }
+    sendGoods(orderNumber) {
+        return _mm.request({
+            type: 'post',
+            url: '/manage/order/send_goods.do',
+            data: {
+                orderNo: orderNumber
+            }
+        })
+    }
 }
 
 export default Order;
